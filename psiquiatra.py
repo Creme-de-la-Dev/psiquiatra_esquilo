@@ -9,9 +9,13 @@ client = dc.Client()
 vitima_id = 364826611041697822 # id do esquilo (davis)
 psico_id = 325407029382348801 # id do ale
 
+#text_channel = client.get_channel(847958499165601846)
+
 class Psiquiatra():
     def __init__(self):
       self.juntos = False
+      self.voice_channel = None
+      self.text_channel = None
 
     async def comecar_sessao(self):
       print('comecar_sessao')
@@ -27,11 +31,12 @@ psiquiatra = Psiquiatra() # criar o psiquiatra
 async def start_paciencia():
   paciencia = 0
   print('comecou a contar')
+  text_paciencia = "A PACIENCIA DE ESQUILO ESTA EM {}%"
   while psiquiatra.juntos:
       paciencia += 1
-      print ("Paciencia do Esquilo:")
-      print(paciencia)
-      await asyncio.sleep(2) # sleep(300)
+      if paciencia % 5 == 0:
+        await psiquiatra.text_channel.send(text_paciencia.format(paciencia))
+      await asyncio.sleep(1) # sleep(110)
 
 print('Psiquiatra foi criado')
 print(psiquiatra)
@@ -44,6 +49,9 @@ async def on_ready():
 async def on_message(message):
   if message.content.startswith('gay'):
     await message.channel.send("Ih ala")
+  if message.content.startswith('psiquiatra comece sua pesquisa'):
+    psiquiatra.text_channel = message.channel
+    #print(psiquiatra.text_channel)
 
 async def checar_ale(channel):
   if channel == None:
@@ -53,6 +61,7 @@ async def checar_ale(channel):
 async def start_psiquiatra(member, after):
   print('start_psiquiatra')
   if any(m.id == vitima_id for m in after.channel.members):
+    psiquiatra.voice_channel = after.channel
     await psiquiatra.comecar_sessao()
 
 @client.event
