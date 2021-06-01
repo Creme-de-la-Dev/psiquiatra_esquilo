@@ -28,14 +28,21 @@ class Psiquiatra():
 
 psiquiatra = Psiquiatra() # criar o psiquiatra
 
+def print_medidor_de_paciencia(odio):
+  mini_odio = int(odio / 5)
+  porcentagem = mini_odio * "#"
+  faltam = 20 - len(porcentagem)
+  string = "Calculando agonia de esquilo... \n" + str(odio) +  '% [' +  (mini_odio * "#") +  (faltam * "=") + "]"
+  
+  return string
+
 async def start_paciencia():
-  paciencia = 0
+  agonia_do_esquilo = 0
   print('comecou a contar')
-  text_paciencia = "A PACIENCIA DE ESQUILO ESTA EM {}%"
   while psiquiatra.juntos:
-      paciencia += 1
-      if paciencia % 5 == 0:
-        await psiquiatra.text_channel.send(text_paciencia.format(paciencia))
+      agonia_do_esquilo += 1
+      if agonia_do_esquilo <= 100 and agonia_do_esquilo % 5 == 0:
+        await psiquiatra.text_channel.send(print_medidor_de_paciencia(agonia_do_esquilo))
       await asyncio.sleep(1) # sleep(110)
 
 print('Psiquiatra foi criado')
@@ -60,9 +67,9 @@ async def checar_ale(channel):
 
 async def start_psiquiatra(member, after):
   print('start_psiquiatra')
-  if any(m.id == vitima_id for m in after.channel.members):
-    psiquiatra.voice_channel = after.channel
-    await psiquiatra.comecar_sessao()
+  # if any(m.id == vitima_id for m in after.channel.members):
+  psiquiatra.voice_channel = after.channel
+  await psiquiatra.comecar_sessao()
 
 @client.event
 async def on_voice_state_update(member, before, after):
